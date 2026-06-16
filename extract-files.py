@@ -10,6 +10,7 @@ from extract_utils.fixups_blob import (
 )
 from extract_utils.fixups_lib import (
     lib_fixups,
+    lib_fixups_user_type,
 )
 from extract_utils.main import (
     ExtractUtils,
@@ -19,6 +20,16 @@ from extract_utils.main import (
 namespace_imports = [
     'device/xiaomi/peridot-miuicamera',
 ]
+
+
+def lib_fixup_system_suffix(lib: str, partition: str, *args, **kwargs):
+    return f'{lib}_{partition}' if partition == 'system' else None
+
+
+lib_fixups: lib_fixups_user_type = {
+    **lib_fixups,
+    'vendor.xiaomi.hardware.campostproc@1.0': lib_fixup_system_suffix,
+}
 
 blob_fixups: blob_fixups_user_type = {
     'system/lib64/libcamera_algoup_jni.xiaomi.so': blob_fixup()
